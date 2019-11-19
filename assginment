@@ -1,0 +1,80 @@
+1
+---------------------
+public class Assginment1 {
+
+	@Test
+	public void verifyReblicIndiaApi() {
+		RestAssured.baseURI = "http://restcountries.eu/rest/v1/name";
+		RequestSpecification httpRequest = RestAssured.given();
+		Response response = httpRequest.get("/INDIA");
+		ResponseBody body = response.getBody();
+		System.out.println("Response Body is: " + body.asString());
+		String responseApi = body.asString();
+		if (responseApi.equals("Republic of India")) {
+			System.out.println("Response Body contains Republic of India");
+		}
+	}
+  -------------------------------------------------------------
+  2
+  ------------------
+  public class Assginment2 {
+	String capital="Oslo";
+	@Test
+	public void getrequestNorway(){
+		 RestAssured.baseURI = "http://restcountries.eu/rest/v1/name";
+		 RequestSpecification httpRequest = RestAssured.given();
+		 Response response = httpRequest.get("/norway");
+		 String body = response.getBody().asString();
+		 int status = response.getStatusCode();
+		 String statusLine = response.getStatusLine();
+		 if(body.equals(capital)){
+			 System.out.println("capital is:"+capital);
+		 }
+		 //full details of json 
+		 System.out.println("Detials of Norway:"+body);
+	}
+---------------------------------------
+3
+----------------
+public class Assginment3 {
+
+	@Test
+	public void postrequestvalidation() {
+		RestAssured.baseURI = "http://restapi.demoqa.com/customer";
+		RequestSpecification request = RestAssured.given();
+		JSONObject requestParams = new JSONObject();
+		requestParams.put("FirstName", "Gajendra");
+		requestParams.put("LastName", "kumar");
+		requestParams.put("UserName", "gajju");
+		requestParams.put("Password", "gajju1");
+		requestParams.put("Email", "gajju@gmail.com");
+		request.body(requestParams.toJSONString());
+		Response response = request.post("/register");
+
+		int statusCode = response.getStatusCode();
+		if (statusCode == 201) {
+			Assert.assertEquals(statusCode, "201");
+			String successCode = response.jsonPath().get("SuccessCode");
+			Assert.assertEquals("Correct Success code was returned", successCode, "OPERATION_SUCCESS");
+		} else if (statusCode == 200) {
+			System.out.println("The status code recieved: " + statusCode);
+			System.out.println("Response body: " + response.body().asString());
+		}
+	}
+  --------------------------
+  4
+  ----------
+  public class Assginment4 {
+
+	@Test
+	public void authTest() {
+		int code = RestAssured.given().auth().preemptive().basic("ToolsQA", "TestPassword").when()
+				.get("http://restapi.demoqa.com/authentication/CheckForAuthentication").getStatusCode();
+		if (code >= 200 || code <= 299) {
+			System.out.println("succes Response code is: " + code);
+		    System.out.println("Credentials for login is correct");
+		} else if (code >= 400 || code <= 499) {
+			System.out.println("Falure status code is: " + code);
+			System.out.println("Login credential is incorrect");
+		}
+	}
